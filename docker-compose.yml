@@ -1,0 +1,48 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo-database
+    networks:
+      - lemoncode-network
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: TopicstoreDb
+    ports:
+      - "27017:27017"
+
+  backend:
+    build:
+      context: ./node-stack/backend
+    container_name: lemon-backend
+    networks:
+      - lemoncode-network
+    depends_on:
+      - mongo
+    environment:
+      DATABASE_URL: mongodb://mongo-database:27017
+      DATABASE_NAME: TopicstoreDb
+      HOST: 0.0.0.0
+      PORT: 5000
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build:
+      context: ./node-stack/frontend
+    container_name: lemon-frontend
+    networks:
+      - lemoncode-network
+    depends_on:
+      - backend
+    environment:
+      API_URI: http://lemon-backend:5000/api/topics
+    ports:
+      - "8080:3000"
+
+networks:
+  lemoncode-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
