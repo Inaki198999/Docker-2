@@ -7,7 +7,9 @@
 
 ```bash
 
- docker-compose up -d Y SE ME CREAN LOS TRES CONTENEDORES
+ docker-compose up -d  
+ 
+ #SE  CREAN LOS TRES CONTENEDORES
 
  ```
 
